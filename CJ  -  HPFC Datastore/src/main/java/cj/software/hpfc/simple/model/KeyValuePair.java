@@ -2,11 +2,12 @@ package cj.software.hpfc.simple.model;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class KeyValuePair implements Serializable
+public class KeyValuePair implements Serializable, Comparable<KeyValuePair>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -14,8 +15,13 @@ public class KeyValuePair implements Serializable
 
 	private String value;
 
+	private KeyValuePair()
+	{
+	}
+
 	public KeyValuePair(String pKey, String pValue)
 	{
+		this();
 		this.setKey(pKey);
 		this.setValue(pValue);
 	}
@@ -72,6 +78,14 @@ public class KeyValuePair implements Serializable
 		{
 			lResult = false;
 		}
+		return lResult;
+	}
+
+	@Override
+	public int compareTo(KeyValuePair pOther)
+	{
+		CompareToBuilder lBuilder = new CompareToBuilder().append(this.key, pOther.key);
+		int lResult = lBuilder.build();
 		return lResult;
 	}
 }
