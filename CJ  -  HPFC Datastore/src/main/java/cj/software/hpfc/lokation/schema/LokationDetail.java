@@ -20,19 +20,19 @@ public class LokationDetail implements Serializable
 	@XmlElement(name = "geogr_breite")
 	private float geogrBreite;
 
-	@XmlElement(name = "geogr_hoehe")
-	private float geogrHoehe;
+	@XmlElement(name = "geogr_laenge")
+	private float geogrLaenge;
 
 	private LokationDetail()
 	{
 	}
 
-	public LokationDetail(String pBezeichnung, float pGeogrBreite, float pGeogrHoehe)
+	public LokationDetail(String pBezeichnung, float pGeogrBreite, float pGeogrLaenge)
 	{
 		this();
 		this.setBezeichnung(pBezeichnung);
 		this.setGeogrBreite(pGeogrBreite);
-		this.setGeogrHoehe(pGeogrHoehe);
+		this.setGeogrLaenge(pGeogrLaenge);
 	}
 
 	public String getBezeichnung()
@@ -55,14 +55,14 @@ public class LokationDetail implements Serializable
 		this.geogrBreite = pGeogrBreite;
 	}
 
-	public float getGeogrHoehe()
+	public float getGeogrLaenge()
 	{
-		return this.geogrHoehe;
+		return this.geogrLaenge;
 	}
 
-	private void setGeogrHoehe(float pGeogrHoehe)
+	private void setGeogrLaenge(float pGeogrLaenge)
 	{
-		this.geogrHoehe = pGeogrHoehe;
+		this.geogrLaenge = pGeogrLaenge;
 	}
 
 	@Override
@@ -96,8 +96,8 @@ public class LokationDetail implements Serializable
 	public String toString()
 	{
 		ToStringBuilder lLBuilder = new ToStringBuilder(this);
-		lLBuilder.append("bezeichnung", this.bezeichnung).append("geogrBreite", this.geogrBreite).append("geogrHoehe",
-				this.geogrHoehe);
+		lLBuilder.append("bezeichnung", this.bezeichnung).append("geogrBreite", this.geogrBreite).append("geogrLaenge",
+				this.geogrLaenge);
 		return lLBuilder.build();
 	}
 

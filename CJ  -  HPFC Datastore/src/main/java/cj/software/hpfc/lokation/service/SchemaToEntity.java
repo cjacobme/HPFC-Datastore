@@ -12,7 +12,7 @@ public class SchemaToEntity
 	public Lokation toLokationDetail(LokationAddPostIn pIn)
 	{
 		LokationDetail lDetail = pIn.getLokationDetail();
-		Lokation lResult = new Lokation(lDetail.getBezeichnung(), lDetail.getGeogrBreite(), lDetail.getGeogrHoehe());
+		Lokation lResult = new Lokation(lDetail.getBezeichnung(), lDetail.getGeogrBreite(), lDetail.getGeogrLaenge());
 		return lResult;
 	}
 }

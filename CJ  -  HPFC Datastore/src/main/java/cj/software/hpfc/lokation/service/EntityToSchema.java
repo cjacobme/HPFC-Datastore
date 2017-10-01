@@ -19,7 +19,7 @@ public class EntityToSchema
 	public LokationGetOut toLokationGetOut(Lokation pDetails)
 	{
 		LokationDetail lDetail = new LokationDetail(pDetails.getBezeichnung(), pDetails.getGeogrBreite(),
-				pDetails.getGeogrHoehe());
+				pDetails.getGeogrLaenge());
 		LokationGetOut lResult = new LokationGetOut(lDetail);
 		return lResult;
 	}

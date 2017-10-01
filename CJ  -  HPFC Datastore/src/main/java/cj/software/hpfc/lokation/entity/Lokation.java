@@ -21,20 +21,20 @@ public class Lokation
 	@Column(name = "geogr_breite")
 	private float geogrBreite;
 
-	@Column(name = "geogr_hoehe")
-	private float geogrHoehe;
+	@Column(name = "geogr_laenge")
+	private float geogrLaenge;
 
 	private Lokation()
 	{
 		this.bucket = 1;
 	}
 
-	public Lokation(String pBezeichnung, float pGeogrBreite, float pGeogrHoehe)
+	public Lokation(String pBezeichnung, float pGeogrBreite, float pGeogrLaenge)
 	{
 		this();
 		this.setBezeichnung(pBezeichnung);
 		this.setGeogrBreite(pGeogrBreite);
-		this.setGeogrHoehe(pGeogrHoehe);
+		this.setGeogrLaenge(pGeogrLaenge);
 	}
 
 	public String getBezeichnung()
@@ -57,14 +57,14 @@ public class Lokation
 		this.geogrBreite = pGeogrBreite;
 	}
 
-	public float getGeogrHoehe()
+	public float getGeogrLaenge()
 	{
-		return this.geogrHoehe;
+		return this.geogrLaenge;
 	}
 
-	public void setGeogrHoehe(float pGeogrHoehe)
+	public void setGeogrLaenge(float pGeogrLaenge)
 	{
-		this.geogrHoehe = pGeogrHoehe;
+		this.geogrLaenge = pGeogrLaenge;
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class Lokation
 		//@formatter:off
 		lBuilder.append("bezeichnung", this.bezeichnung)
 			.append("geogrBreite", this.geogrBreite)
-			.append("geogrHoehe", this.geogrHoehe);
+			.append("geogrLaenge", this.geogrLaenge);
 		//@formatter:on
 		return lBuilder.build();
 	}
