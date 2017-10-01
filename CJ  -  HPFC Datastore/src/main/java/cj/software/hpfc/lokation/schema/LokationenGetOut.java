@@ -1,4 +1,4 @@
-package cj.software.hpfc.lokation.model;
+package cj.software.hpfc.lokation.schema;
 
 import java.io.Serializable;
 import java.util.Collections;

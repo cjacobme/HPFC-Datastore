@@ -12,6 +12,9 @@ import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.mapping.MappingManager;
+
+import cj.software.hpfc.lokation.entity.Lokation;
 
 public class LokationenDAO
 {
@@ -55,6 +58,39 @@ public class LokationenDAO
 			String lBezeichnung = bRow.getString("bezeichnung");
 			lResult.add(lBezeichnung);
 		}
+		return lResult;
+	}
+
+	public Lokation readLokationDetails(String pBezeichnung)
+	{
+		String lHostname = System.getProperty("host");
+
+		if (lHostname == null)
+		{
+			throw new IllegalStateException("System Property \"host\" not set");
+		}
+		String lKeyspaceName = System.getProperty("keyspace");
+		if (lKeyspaceName == null)
+		{
+			throw new IllegalStateException("System Property \"keyspace\" not set");
+		}
+		try (Cluster lCluster = Cluster.builder().addContactPoint(lHostname).build())
+		{
+			this.logger.info("connected to %s", lHostname);
+			try (Session lSession = lCluster.connect(lKeyspaceName))
+			{
+				this.logger.info("opened session on %s", lKeyspaceName);
+				Lokation lResult = this.readLokationDetails(lSession, pBezeichnung);
+				return lResult;
+			}
+		}
+	}
+
+	private Lokation readLokationDetails(Session pSession, String pBezeichnung)
+	{
+		MappingManager lMappingManager = new MappingManager(pSession);
+		LokationAccessor lAccessor = lMappingManager.createAccessor(LokationAccessor.class);
+		Lokation lResult = lAccessor.readLokationDetails(pBezeichnung);
 		return lResult;
 	}
 }
