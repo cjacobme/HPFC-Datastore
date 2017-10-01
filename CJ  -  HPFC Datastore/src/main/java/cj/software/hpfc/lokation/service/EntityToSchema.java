@@ -2,14 +2,21 @@ package cj.software.hpfc.lokation.service;
 
 import java.util.List;
 
+import javax.enterprise.context.Dependent;
+
 import cj.software.hpfc.lokation.entity.Lokation;
 import cj.software.hpfc.lokation.schema.LokationAddPostOut;
 import cj.software.hpfc.lokation.schema.LokationDetail;
 import cj.software.hpfc.lokation.schema.LokationGetOut;
 import cj.software.hpfc.lokation.schema.LokationenGetOut;
 
+@Dependent
 public class EntityToSchema
 {
+	public EntityToSchema()
+	{
+	}
+
 	public LokationenGetOut toLokationenGetOut(List<String> pBezeichnungen)
 	{
 		LokationenGetOut lResult = new LokationenGetOut(pBezeichnungen);

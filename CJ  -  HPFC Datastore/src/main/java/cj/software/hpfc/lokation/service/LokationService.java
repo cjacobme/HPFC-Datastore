@@ -24,9 +24,11 @@ import cj.software.hpfc.lokation.schema.LokationenGetOut;
 @Dependent
 public class LokationService
 {
-	private LokationenDAO dao = new LokationenDAO();
+	@Inject
+	private LokationenDAO dao;
 
-	private EntityToSchema entityToSchema = new EntityToSchema();
+	@Inject
+	private EntityToSchema entityToSchema;
 
 	@Inject
 	private SchemaToEntity schemaToEntity;
