@@ -1,21 +1,20 @@
 package cj.software.cassandra;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.DependsOn;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 
 @ApplicationScoped
-@Singleton
-@Startup
-@DependsOn("ClusterProducer")
 public class SessionProducer
 {
+	private Logger logger = LogManager.getFormatterLogger();
+
 	@Inject
 	private ClusterProducer clusterProducer;
 
@@ -25,12 +24,8 @@ public class SessionProducer
 	{
 	}
 
-	@PostConstruct
-	public void setup()
-	{
-		getSession();
-	}
-
+	@Produces
+	@ApplicationScoped
 	public Session getSession()
 	{
 		if (this.session == null)
@@ -40,8 +35,10 @@ public class SessionProducer
 			{
 				throw new IllegalStateException("System Property \"keyspace\" not set");
 			}
+			this.logger.info("open session on keyspace \"%s\"...", lKeyspaceName);
 			Cluster lCluster = this.clusterProducer.getCluster();
 			this.session = lCluster.connect(lKeyspaceName);
+			this.logger.debug("Session established");
 		}
 		return this.session;
 	}

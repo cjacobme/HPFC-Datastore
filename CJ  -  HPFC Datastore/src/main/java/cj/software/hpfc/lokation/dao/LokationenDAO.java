@@ -15,7 +15,6 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 
-import cj.software.cassandra.SessionProducer;
 import cj.software.hpfc.lokation.entity.Lokation;
 
 @Dependent
@@ -26,7 +25,7 @@ public class LokationenDAO implements Serializable
 	private static final int BUCKET_NO = 1;
 
 	@Inject
-	private SessionProducer sessionProducer;
+	private Session session;
 
 	public LokationenDAO()
 	{
@@ -34,8 +33,7 @@ public class LokationenDAO implements Serializable
 
 	public List<String> readLokationBezeichnungen()
 	{
-		Session lSession = this.sessionProducer.getSession();
-		List<String> lResult = this.readLokationBezeichnungen(lSession);
+		List<String> lResult = this.readLokationBezeichnungen(this.session);
 		return lResult;
 
 	}
@@ -57,8 +55,7 @@ public class LokationenDAO implements Serializable
 
 	public Lokation readLokationDetails(String pBezeichnung)
 	{
-		Session lSession = this.sessionProducer.getSession();
-		Lokation lResult = this.readLokationDetails(lSession, pBezeichnung);
+		Lokation lResult = this.readLokationDetails(this.session, pBezeichnung);
 		return lResult;
 	}
 
@@ -72,8 +69,7 @@ public class LokationenDAO implements Serializable
 
 	public String addLokation(Lokation pLokation)
 	{
-		Session lSession = this.sessionProducer.getSession();
-		String lResult = this.addLokation(lSession, pLokation);
+		String lResult = this.addLokation(this.session, pLokation);
 		return lResult;
 	}
 
