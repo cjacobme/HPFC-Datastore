@@ -11,9 +11,9 @@ import cj.software.hpfc.lokation.schema.LokationGetOut;
 import cj.software.hpfc.lokation.schema.LokationenGetOut;
 
 @Dependent
-public class EntityToSchema
+public class LokationEntityToSchema
 {
-	public EntityToSchema()
+	public LokationEntityToSchema()
 	{
 	}
 

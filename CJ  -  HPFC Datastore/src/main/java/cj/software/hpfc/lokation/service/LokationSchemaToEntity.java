@@ -7,7 +7,7 @@ import cj.software.hpfc.lokation.schema.LokationAddPostIn;
 import cj.software.hpfc.lokation.schema.LokationDetail;
 
 @Dependent
-public class SchemaToEntity
+public class LokationSchemaToEntity
 {
 	public Lokation toLokationDetail(LokationAddPostIn pIn)
 	{

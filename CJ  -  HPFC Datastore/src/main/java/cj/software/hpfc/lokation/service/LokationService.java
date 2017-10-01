@@ -28,10 +28,10 @@ public class LokationService
 	private LokationenDAO dao;
 
 	@Inject
-	private EntityToSchema entityToSchema;
+	private LokationEntityToSchema entityToSchema;
 
 	@Inject
-	private SchemaToEntity schemaToEntity;
+	private LokationSchemaToEntity schemaToEntity;
 
 	@GET
 	public LokationenGetOut getLokationen()
