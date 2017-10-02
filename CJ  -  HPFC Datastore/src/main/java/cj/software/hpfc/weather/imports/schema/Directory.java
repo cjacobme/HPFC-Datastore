@@ -21,7 +21,6 @@ public class Directory implements Serializable, Comparable<Directory>
 
 	private Directory()
 	{
-
 	}
 
 	public Directory(String pName)

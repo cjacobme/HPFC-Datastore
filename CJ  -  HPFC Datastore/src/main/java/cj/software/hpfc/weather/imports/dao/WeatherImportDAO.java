@@ -8,10 +8,13 @@ import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.datastax.driver.core.BatchStatement;
+import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 
+import cj.software.hpfc.weather.imports.entity.FilesFinished;
 import cj.software.hpfc.weather.imports.entity.ImportDirectory;
 
 @Dependent
@@ -42,5 +45,19 @@ public class WeatherImportDAO implements Serializable
 	{
 		Mapper<ImportDirectory> lMapper = this.mappingManager.mapper(ImportDirectory.class);
 		lMapper.save(pImportDirectory);
+	}
+
+	public void save(FilesFinished pFilesFinished)
+	{
+		ImportDirectory lImportDirectory = new ImportDirectory(pFilesFinished.getDirectoryName(), false);
+
+		Mapper<FilesFinished> lMapperFiles = this.mappingManager.mapper(FilesFinished.class);
+		Mapper<ImportDirectory> lMapperDirs = this.mappingManager.mapper(ImportDirectory.class);
+
+		BatchStatement lBatchStatement = new BatchStatement();
+		lBatchStatement.add(lMapperFiles.saveQuery(pFilesFinished));
+		lBatchStatement.add(lMapperDirs.saveQuery(lImportDirectory));
+		Session lSession = this.mappingManager.getSession();
+		lSession.execute(lBatchStatement);
 	}
 }

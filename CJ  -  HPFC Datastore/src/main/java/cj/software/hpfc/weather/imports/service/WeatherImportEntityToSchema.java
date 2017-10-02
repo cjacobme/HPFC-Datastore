@@ -6,10 +6,13 @@ import java.util.TreeSet;
 
 import javax.enterprise.context.Dependent;
 
+import cj.software.hpfc.weather.imports.entity.FilesFinished;
 import cj.software.hpfc.weather.imports.entity.ImportDirectory;
 import cj.software.hpfc.weather.imports.schema.DirectoriesListGetOut;
 import cj.software.hpfc.weather.imports.schema.Directory;
+import cj.software.hpfc.weather.imports.schema.File;
 import cj.software.hpfc.weather.imports.schema.OperationMarkDirectoryFinishedOut;
+import cj.software.hpfc.weather.imports.schema.OperationMarkFileFinishedOut;
 
 @Dependent
 public class WeatherImportEntityToSchema
@@ -42,6 +45,18 @@ public class WeatherImportEntityToSchema
 	{
 		Directory lDirectory = this.toDirectory(pImportDirectory);
 		OperationMarkDirectoryFinishedOut lResult = new OperationMarkDirectoryFinishedOut(lDirectory);
+		return lResult;
+	}
+
+	public OperationMarkFileFinishedOut toOperationMarkFileFinishedOut(FilesFinished pFilesFinished)
+	{
+		String lDirectoryName = pFilesFinished.getDirectoryName();
+		ImportDirectory lImportDirectory = new ImportDirectory(lDirectoryName, false);
+		Directory lDirectory = this.toDirectory(lImportDirectory);
+		String lFileName = pFilesFinished.getFileName();
+		boolean lFinished = pFilesFinished.isFileFinished();
+		File lFile = new File(lDirectory, lFileName, lFinished);
+		OperationMarkFileFinishedOut lResult = new OperationMarkFileFinishedOut(lFile);
 		return lResult;
 	}
 }

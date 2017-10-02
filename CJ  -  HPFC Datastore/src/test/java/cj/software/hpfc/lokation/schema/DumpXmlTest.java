@@ -7,6 +7,7 @@ import javax.xml.bind.Marshaller;
 import org.junit.Test;
 
 import cj.software.hpfc.weather.imports.schema.OperationMarkDirectoryFinishedIn;
+import cj.software.hpfc.weather.imports.schema.OperationMarkFileFinishedIn;
 
 public class DumpXmlTest
 {
@@ -15,13 +16,14 @@ public class DumpXmlTest
 	{
 		LokationDetail lDetail = new LokationDetail("Nordpol", 90.0f, 0.0f);
 		LokationAddPostIn lInput = new LokationAddPostIn(lDetail);
-		this.dump(LokationAddPostIn.class, lInput);
+		this.dump(lInput);
 	}
 
-	private void dump(Class<?> pClass, Object pObject) throws JAXBException
+	private void dump(Object pObject) throws JAXBException
 	{
-		System.out.println("============ " + pClass.getSimpleName() + " ============");
-		JAXBContext lCtx = JAXBContext.newInstance(pClass);
+		Class<?> lClass = pObject.getClass();
+		System.out.println("============ " + lClass.getSimpleName() + " ============");
+		JAXBContext lCtx = JAXBContext.newInstance(lClass);
 		Marshaller lMarshaller = lCtx.createMarshaller();
 		lMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
 		lMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
@@ -33,6 +35,13 @@ public class DumpXmlTest
 	public void dumpOperationMarkDirectoryFinishedIn() throws JAXBException
 	{
 		OperationMarkDirectoryFinishedIn lRoot = new OperationMarkDirectoryFinishedIn("Verzeichnis 4711");
-		this.dump(OperationMarkDirectoryFinishedIn.class, lRoot);
+		this.dump(lRoot);
+	}
+
+	@Test
+	public void dumpOperationMarkFileFinishedIn() throws JAXBException
+	{
+		OperationMarkFileFinishedIn lOperation = new OperationMarkFileFinishedIn("Verzeichnis 1909", "Ole.txt");
+		this.dump(lOperation);
 	}
 }

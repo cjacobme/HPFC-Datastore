@@ -16,10 +16,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cj.software.hpfc.weather.imports.dao.WeatherImportDAO;
+import cj.software.hpfc.weather.imports.entity.FilesFinished;
 import cj.software.hpfc.weather.imports.entity.ImportDirectory;
 import cj.software.hpfc.weather.imports.schema.DirectoriesListGetOut;
 import cj.software.hpfc.weather.imports.schema.OperationMarkDirectoryFinishedIn;
 import cj.software.hpfc.weather.imports.schema.OperationMarkDirectoryFinishedOut;
+import cj.software.hpfc.weather.imports.schema.OperationMarkFileFinishedIn;
+import cj.software.hpfc.weather.imports.schema.OperationMarkFileFinishedOut;
 
 @Path("/weather/imports")
 @Produces(MediaType.APPLICATION_XML)
@@ -55,6 +58,16 @@ public class WeatherImportService
 		OperationMarkDirectoryFinishedOut lResult = this.entityToSchema
 				.toOperationMarkDirectoryFinishedOut(lImportDirectory);
 		this.logger.info("Directory marked as finished: %s", lImportDirectory);
+		return lResult;
+	}
+
+	@POST
+	@Path("operations/mark-file-finished")
+	public OperationMarkFileFinishedOut markFinished(OperationMarkFileFinishedIn pOperation)
+	{
+		FilesFinished lFilesFinished = this.schemaToEntity.toFilesFinished(pOperation);
+		this.weatherImportDAO.save(lFilesFinished);
+		OperationMarkFileFinishedOut lResult = this.entityToSchema.toOperationMarkFileFinishedOut(lFilesFinished);
 		return lResult;
 	}
 }
