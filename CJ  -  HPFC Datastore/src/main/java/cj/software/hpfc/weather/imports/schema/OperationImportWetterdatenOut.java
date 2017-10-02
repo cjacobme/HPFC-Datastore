@@ -8,15 +8,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OperationMarkFileFinishedOut
+public class OperationImportWetterdatenOut
 {
 	private File file;
 
-	private OperationMarkFileFinishedOut()
+	private OperationImportWetterdatenOut()
 	{
 	}
 
-	public OperationMarkFileFinishedOut(File pFile)
+	public OperationImportWetterdatenOut(File pFile)
 	{
 		this();
 		this.setFile(pFile);

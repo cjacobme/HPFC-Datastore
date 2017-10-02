@@ -18,11 +18,12 @@ import org.apache.logging.log4j.Logger;
 import cj.software.hpfc.weather.imports.dao.WeatherImportDAO;
 import cj.software.hpfc.weather.imports.entity.FilesFinished;
 import cj.software.hpfc.weather.imports.entity.ImportDirectory;
+import cj.software.hpfc.weather.imports.entity.WeatherValues;
 import cj.software.hpfc.weather.imports.schema.DirectoriesListGetOut;
+import cj.software.hpfc.weather.imports.schema.OperationImportWetterdatenIn;
+import cj.software.hpfc.weather.imports.schema.OperationImportWetterdatenOut;
 import cj.software.hpfc.weather.imports.schema.OperationMarkDirectoryFinishedIn;
 import cj.software.hpfc.weather.imports.schema.OperationMarkDirectoryFinishedOut;
-import cj.software.hpfc.weather.imports.schema.OperationMarkFileFinishedIn;
-import cj.software.hpfc.weather.imports.schema.OperationMarkFileFinishedOut;
 
 @Path("/weather/imports")
 @Produces(MediaType.APPLICATION_XML)
@@ -62,12 +63,13 @@ public class WeatherImportService
 	}
 
 	@POST
-	@Path("operations/mark-file-finished")
-	public OperationMarkFileFinishedOut markFinished(OperationMarkFileFinishedIn pOperation)
+	@Path("operations/import-wetterdaten")
+	public OperationImportWetterdatenOut importWetterdaten(OperationImportWetterdatenIn pOperation)
 	{
+		List<WeatherValues> lValuesList = this.schemaToEntity.toValuesList(pOperation);
 		FilesFinished lFilesFinished = this.schemaToEntity.toFilesFinished(pOperation);
-		this.weatherImportDAO.save(lFilesFinished);
-		OperationMarkFileFinishedOut lResult = this.entityToSchema.toOperationMarkFileFinishedOut(lFilesFinished);
+		this.weatherImportDAO.save(lFilesFinished, lValuesList);
+		OperationImportWetterdatenOut lResult = this.entityToSchema.toOperationImportWetterdatenOut(lFilesFinished);
 		return lResult;
 	}
 }

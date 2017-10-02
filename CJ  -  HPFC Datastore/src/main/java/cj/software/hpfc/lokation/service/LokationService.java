@@ -54,7 +54,7 @@ public class LokationService
 	@Consumes(MediaType.APPLICATION_XML)
 	public LokationAddPostOut addNewLokation(LokationAddPostIn pSource)
 	{
-		Lokation lLokation = this.schemaToEntity.toLokationDetail(pSource);
+		Lokation lLokation = this.schemaToEntity.toLokation(pSource);
 		String lReturned = this.dao.addLokation(lLokation);
 		LokationAddPostOut lResult = this.entityToSchema.toLokationAddPostOut(lReturned);
 		return lResult;

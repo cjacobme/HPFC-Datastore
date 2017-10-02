@@ -9,10 +9,17 @@ import cj.software.hpfc.lokation.schema.LokationDetail;
 @Dependent
 public class LokationSchemaToEntity
 {
-	public Lokation toLokationDetail(LokationAddPostIn pIn)
+	public Lokation toLokation(LokationAddPostIn pIn)
 	{
 		LokationDetail lDetail = pIn.getLokationDetail();
-		Lokation lResult = new Lokation(lDetail.getBezeichnung(), lDetail.getGeogrBreite(), lDetail.getGeogrLaenge());
+		Lokation lResult = this.toLokation(lDetail);
+		return lResult;
+	}
+
+	public Lokation toLokation(LokationDetail pLokationDetail)
+	{
+		Lokation lResult = new Lokation(pLokationDetail.getBezeichnung(), pLokationDetail.getGeogrBreite(),
+				pLokationDetail.getGeogrLaenge());
 		return lResult;
 	}
 }

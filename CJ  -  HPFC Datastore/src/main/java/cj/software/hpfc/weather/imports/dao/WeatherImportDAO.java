@@ -9,13 +9,18 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.datastax.driver.core.BatchStatement;
+import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.extras.codecs.enums.EnumNameCodec;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 
+import cj.software.hpfc.lokation.entity.Lokation;
 import cj.software.hpfc.weather.imports.entity.FilesFinished;
 import cj.software.hpfc.weather.imports.entity.ImportDirectory;
+import cj.software.hpfc.weather.imports.entity.MeteoMeasure;
+import cj.software.hpfc.weather.imports.entity.WeatherValues;
 
 @Dependent
 public class WeatherImportDAO implements Serializable
@@ -24,6 +29,11 @@ public class WeatherImportDAO implements Serializable
 
 	@Inject
 	private MappingManager mappingManager;
+
+	public WeatherImportDAO()
+	{
+		CodecRegistry.DEFAULT_INSTANCE.register(new EnumNameCodec<MeteoMeasure>(MeteoMeasure.class));
+	}
 
 	public List<ImportDirectory> listDirectories(String... pSearched)
 	{
@@ -47,16 +57,33 @@ public class WeatherImportDAO implements Serializable
 		lMapper.save(pImportDirectory);
 	}
 
-	public void save(FilesFinished pFilesFinished)
+	public void save(FilesFinished pFilesFinished, List<WeatherValues> pValuesList)
 	{
 		ImportDirectory lImportDirectory = new ImportDirectory(pFilesFinished.getDirectoryName(), false);
 
 		Mapper<FilesFinished> lMapperFiles = this.mappingManager.mapper(FilesFinished.class);
 		Mapper<ImportDirectory> lMapperDirs = this.mappingManager.mapper(ImportDirectory.class);
+		Mapper<WeatherValues> lMapperWeatherValues = this.mappingManager.mapper(WeatherValues.class);
+		Mapper<Lokation> lMapperLokation = this.mappingManager.mapper(Lokation.class);
 
 		BatchStatement lBatchStatement = new BatchStatement();
 		lBatchStatement.add(lMapperFiles.saveQuery(pFilesFinished));
 		lBatchStatement.add(lMapperDirs.saveQuery(lImportDirectory));
+
+		Lokation lLastLokation = null;
+
+		for (WeatherValues bWeatherValues : pValuesList)
+		{
+			Lokation lCurrentLokation = new Lokation(bWeatherValues.getLokationBezeichnung(),
+					bWeatherValues.getGeogrBreite(), bWeatherValues.getGeogrLaenge());
+			if (!lCurrentLokation.equals(lLastLokation))
+			{
+				lBatchStatement.add(lMapperLokation.saveQuery(lCurrentLokation));
+				lLastLokation = lCurrentLokation;
+			}
+			lBatchStatement.add(lMapperWeatherValues.saveQuery(bWeatherValues));
+		}
+
 		Session lSession = this.mappingManager.getSession();
 		lSession.execute(lBatchStatement);
 	}
