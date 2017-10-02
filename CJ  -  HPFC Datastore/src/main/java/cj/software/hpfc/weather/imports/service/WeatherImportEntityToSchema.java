@@ -9,6 +9,7 @@ import javax.enterprise.context.Dependent;
 import cj.software.hpfc.weather.imports.entity.ImportDirectory;
 import cj.software.hpfc.weather.imports.schema.DirectoriesListGetOut;
 import cj.software.hpfc.weather.imports.schema.Directory;
+import cj.software.hpfc.weather.imports.schema.OperationMarkDirectoryFinishedOut;
 
 @Dependent
 public class WeatherImportEntityToSchema
@@ -34,6 +35,13 @@ public class WeatherImportEntityToSchema
 	public Directory toDirectory(ImportDirectory pDirectory)
 	{
 		Directory lResult = new Directory(pDirectory.getDirectoryName(), pDirectory.isFinished());
+		return lResult;
+	}
+
+	public OperationMarkDirectoryFinishedOut toOperationMarkDirectoryFinishedOut(ImportDirectory pImportDirectory)
+	{
+		Directory lDirectory = this.toDirectory(pImportDirectory);
+		OperationMarkDirectoryFinishedOut lResult = new OperationMarkDirectoryFinishedOut(lDirectory);
 		return lResult;
 	}
 }

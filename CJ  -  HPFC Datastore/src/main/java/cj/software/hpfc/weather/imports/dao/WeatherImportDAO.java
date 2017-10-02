@@ -8,6 +8,7 @@ import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 
@@ -35,5 +36,11 @@ public class WeatherImportDAO implements Serializable
 		List<String> lResult = new ArrayList<>(pItems.length);
 		lResult = Arrays.asList(pItems);
 		return lResult;
+	}
+
+	public void save(ImportDirectory pImportDirectory)
+	{
+		Mapper<ImportDirectory> lMapper = this.mappingManager.mapper(ImportDirectory.class);
+		lMapper.save(pImportDirectory);
 	}
 }
