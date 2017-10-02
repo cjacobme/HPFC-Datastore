@@ -20,7 +20,7 @@ import cj.software.hpfc.lokation.schema.LokationGetOut;
 import cj.software.hpfc.lokation.schema.LokationenGetOut;
 
 @Path("/lokationen")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_XML)
 @Dependent
 public class LokationService
 {
@@ -51,7 +51,7 @@ public class LokationService
 	}
 
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_XML)
 	public LokationAddPostOut addNewLokation(LokationAddPostIn pSource)
 	{
 		Lokation lLokation = this.schemaToEntity.toLokationDetail(pSource);
