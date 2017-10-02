@@ -8,7 +8,6 @@ import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 
@@ -20,12 +19,11 @@ public class WeatherImportDAO implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private Session session;
+	private MappingManager mappingManager;
 
 	public List<ImportDirectory> listDirectories(String... pSearched)
 	{
-		MappingManager lMappingManager = new MappingManager(this.session);
-		WeatherImportAccessor lAccessor = lMappingManager.createAccessor(WeatherImportAccessor.class);
+		WeatherImportAccessor lAccessor = this.mappingManager.createAccessor(WeatherImportAccessor.class);
 		List<String> lAsList = this.toStringList(pSearched);
 		Result<ImportDirectory> lRead = lAccessor.listDirectories(lAsList);
 		List<ImportDirectory> lResult = lRead.all();
