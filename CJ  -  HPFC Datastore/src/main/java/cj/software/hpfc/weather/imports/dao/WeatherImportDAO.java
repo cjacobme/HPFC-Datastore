@@ -20,6 +20,8 @@ import cj.software.hpfc.lokation.entity.Lokation;
 import cj.software.hpfc.weather.imports.entity.FilesFinished;
 import cj.software.hpfc.weather.imports.entity.ImportDirectory;
 import cj.software.hpfc.weather.imports.entity.MeteoMeasure;
+import cj.software.hpfc.weather.imports.entity.TmpWindU;
+import cj.software.hpfc.weather.imports.entity.TmpWindV;
 import cj.software.hpfc.weather.imports.entity.WeatherValues;
 
 @Dependent
@@ -65,6 +67,8 @@ public class WeatherImportDAO implements Serializable
 		Mapper<ImportDirectory> lMapperDirs = this.mappingManager.mapper(ImportDirectory.class);
 		Mapper<WeatherValues> lMapperWeatherValues = this.mappingManager.mapper(WeatherValues.class);
 		Mapper<Lokation> lMapperLokation = this.mappingManager.mapper(Lokation.class);
+		Mapper<TmpWindU> lMapperWindU = this.mappingManager.mapper(TmpWindU.class);
+		Mapper<TmpWindV> lMapperWindV = this.mappingManager.mapper(TmpWindV.class);
 
 		BatchStatement lBatchStatement = new BatchStatement();
 		lBatchStatement.add(lMapperFiles.saveQuery(pFilesFinished));
@@ -82,9 +86,43 @@ public class WeatherImportDAO implements Serializable
 				lLastLokation = lCurrentLokation;
 			}
 			lBatchStatement.add(lMapperWeatherValues.saveQuery(bWeatherValues));
+			MeteoMeasure lMeteoMeasure = bWeatherValues.getMeteoMeasure();
+			switch (lMeteoMeasure)
+			{
+			case Flux:
+				break;
+			case Speed_Total:
+				break;
+			case Speed_U:
+				TmpWindU lTmpWindU = this.toTmpWindU(bWeatherValues);
+				lBatchStatement.add(lMapperWindU.saveQuery(lTmpWindU));
+				break;
+			case Speed_V:
+				TmpWindV lTmpWindV = this.toTmpWindV(bWeatherValues);
+				lBatchStatement.add(lMapperWindV.saveQuery(lTmpWindV));
+				break;
+			case Temperature:
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown: " + lMeteoMeasure);
+			}
 		}
 
 		Session lSession = this.mappingManager.getSession();
 		lSession.execute(lBatchStatement);
+	}
+
+	private TmpWindU toTmpWindU(WeatherValues pWeatherValues)
+	{
+		TmpWindU lResult = new TmpWindU(pWeatherValues.getLokationBezeichnung(), pWeatherValues.getPrognoseZeitpunkt(),
+				pWeatherValues.getZeitpunkt(), pWeatherValues.getWert());
+		return lResult;
+	}
+
+	private TmpWindV toTmpWindV(WeatherValues pWeatherValues)
+	{
+		TmpWindV lResult = new TmpWindV(pWeatherValues.getLokationBezeichnung(), pWeatherValues.getPrognoseZeitpunkt(),
+				pWeatherValues.getZeitpunkt(), pWeatherValues.getWert());
+		return lResult;
 	}
 }

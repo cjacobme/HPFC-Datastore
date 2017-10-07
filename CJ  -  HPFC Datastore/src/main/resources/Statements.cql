@@ -39,3 +39,22 @@ CREATE TABLE lokation (
 	geogr_laenge FLOAT,
 	PRIMARY KEY((bucket), bezeichnung)
 );
+
+//Q: List imported wind speeds in U direction that were not calculated to total speed
+CREATE TABLE tmp_wind_u (
+	lokation_bezeichnung TEXT,
+	prognosezeitpunkt TIMESTAMP,
+	zeitpunkt TIMESTAMP,
+	wert DOUBLE,
+	PRIMARY KEY ((lokation_bezeichnung, prognosezeitpunkt, zeitpunkt))
+);
+
+//Q: List imported wind speeds in V direction that were not calculated to total speed
+CREATE TABLE tmp_wind_v (
+	lokation_bezeichnung TEXT,
+	prognosezeitpunkt TIMESTAMP,
+	zeitpunkt TIMESTAMP,
+	wert DOUBLE,
+	PRIMARY KEY ((lokation_bezeichnung, prognosezeitpunkt, zeitpunkt))
+);
+
