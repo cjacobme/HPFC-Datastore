@@ -3,6 +3,10 @@ package cj.software.hpfc.weather.imports.entity;
 import java.time.Instant;
 import java.util.Objects;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.datastax.driver.extras.codecs.jdk8.InstantCodec;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
@@ -23,6 +27,12 @@ public class TmpWindU
 	@Column(name = "zeitpunkt", codec = InstantCodec.class)
 	private Instant zeitpunkt;
 
+	@Column(name = "geogr_breite")
+	private float geogrBreite;
+
+	@Column(name = "geogr_laenge")
+	private float geogrLaenge;
+
 	@Column(name = "wert")
 	private double wert;
 
@@ -30,12 +40,15 @@ public class TmpWindU
 	{
 	}
 
-	public TmpWindU(String pLokationBezeichnung, Instant pPrognoseZeitpunkt, Instant pZeitpunkt, double pWert)
+	public TmpWindU(String pLokationBezeichnung, Instant pPrognoseZeitpunkt, Instant pZeitpunkt, float pGeogrBreite,
+			float pGeogrLaenge, double pWert)
 	{
 		this();
 		this.setLokationBezeichnung(pLokationBezeichnung);
 		this.setPrognoseZeitpunkt(pPrognoseZeitpunkt);
 		this.setZeitpunkt(pZeitpunkt);
+		this.setGeogrBreite(pGeogrBreite);
+		this.setGeogrLaenge(pGeogrLaenge);
 		this.setWert(pWert);
 	}
 
@@ -52,6 +65,16 @@ public class TmpWindU
 	public Instant getZeitpunkt()
 	{
 		return this.zeitpunkt;
+	}
+
+	public float getGeogrBreite()
+	{
+		return this.geogrBreite;
+	}
+
+	public float getGeogrLaenge()
+	{
+		return this.geogrLaenge;
 	}
 
 	public double getWert()
@@ -74,9 +97,56 @@ public class TmpWindU
 		this.zeitpunkt = Objects.requireNonNull(pZeitpunkt);
 	}
 
+	private void setGeogrBreite(float pGeogrBreite)
+	{
+		this.geogrBreite = Objects.requireNonNull(pGeogrBreite);
+	}
+
+	private void setGeogrLaenge(float pGeogrLaenge)
+	{
+		this.geogrLaenge = Objects.requireNonNull(pGeogrLaenge);
+	}
+
 	private void setWert(double pWert)
 	{
 		this.wert = pWert;
 	}
 
+	@Override
+	public String toString()
+	{
+		ToStringBuilder lBuilder = new ToStringBuilder(this);
+		lBuilder.append("lokationBezeichnung", this.lokationBezeichnung)
+				.append("prognoseZeitpunkt", this.prognoseZeitpunkt).append("zeitpunkt", this.zeitpunkt)
+				.append("wert", this.wert);
+		return lBuilder.build();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		HashCodeBuilder lBuilder = new HashCodeBuilder();
+		lBuilder.append(this.lokationBezeichnung).append(this.prognoseZeitpunkt).append(this.zeitpunkt);
+		int lResult = lBuilder.build();
+		return lResult;
+	}
+
+	@Override
+	public boolean equals(Object pOther)
+	{
+		boolean lResult;
+		if (pOther instanceof TmpWindU)
+		{
+			TmpWindU lOther = (TmpWindU) pOther;
+			EqualsBuilder lBuilder = new EqualsBuilder();
+			lBuilder.append(this.lokationBezeichnung, lOther.lokationBezeichnung)
+					.append(this.prognoseZeitpunkt, lOther.prognoseZeitpunkt).append(this.zeitpunkt, lOther.zeitpunkt);
+			lResult = lBuilder.build();
+		}
+		else
+		{
+			lResult = false;
+		}
+		return lResult;
+	}
 }

@@ -45,6 +45,8 @@ CREATE TABLE tmp_wind_u (
 	lokation_bezeichnung TEXT,
 	prognosezeitpunkt TIMESTAMP,
 	zeitpunkt TIMESTAMP,
+	geogr_breite FLOAT,
+	geogr_laenge FLOAT,
 	wert DOUBLE,
 	PRIMARY KEY ((lokation_bezeichnung, prognosezeitpunkt, zeitpunkt))
 );
@@ -54,6 +56,8 @@ CREATE TABLE tmp_wind_v (
 	lokation_bezeichnung TEXT,
 	prognosezeitpunkt TIMESTAMP,
 	zeitpunkt TIMESTAMP,
+	geogr_breite FLOAT,
+	geogr_laenge FLOAT,
 	wert DOUBLE,
 	PRIMARY KEY ((lokation_bezeichnung, prognosezeitpunkt, zeitpunkt))
 );

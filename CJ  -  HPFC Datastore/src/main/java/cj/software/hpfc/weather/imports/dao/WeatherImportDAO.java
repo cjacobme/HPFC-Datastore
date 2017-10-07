@@ -3,10 +3,15 @@ package cj.software.hpfc.weather.imports.dao;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.CodecRegistry;
@@ -22,12 +27,15 @@ import cj.software.hpfc.weather.imports.entity.ImportDirectory;
 import cj.software.hpfc.weather.imports.entity.MeteoMeasure;
 import cj.software.hpfc.weather.imports.entity.TmpWindU;
 import cj.software.hpfc.weather.imports.entity.TmpWindV;
+import cj.software.hpfc.weather.imports.entity.WeatherKey;
 import cj.software.hpfc.weather.imports.entity.WeatherValues;
 
 @Dependent
 public class WeatherImportDAO implements Serializable
 {
 	private static final long serialVersionUID = 1L;
+
+	private Logger logger = LogManager.getFormatterLogger();
 
 	@Inject
 	private MappingManager mappingManager;
@@ -110,19 +118,64 @@ public class WeatherImportDAO implements Serializable
 
 		Session lSession = this.mappingManager.getSession();
 		lSession.execute(lBatchStatement);
+		this.logger.info("imported %s", pFilesFinished);
 	}
 
 	private TmpWindU toTmpWindU(WeatherValues pWeatherValues)
 	{
 		TmpWindU lResult = new TmpWindU(pWeatherValues.getLokationBezeichnung(), pWeatherValues.getPrognoseZeitpunkt(),
-				pWeatherValues.getZeitpunkt(), pWeatherValues.getWert());
+				pWeatherValues.getZeitpunkt(), pWeatherValues.getGeogrBreite(), pWeatherValues.getGeogrLaenge(),
+				pWeatherValues.getWert());
 		return lResult;
 	}
 
 	private TmpWindV toTmpWindV(WeatherValues pWeatherValues)
 	{
 		TmpWindV lResult = new TmpWindV(pWeatherValues.getLokationBezeichnung(), pWeatherValues.getPrognoseZeitpunkt(),
-				pWeatherValues.getZeitpunkt(), pWeatherValues.getWert());
+				pWeatherValues.getZeitpunkt(), pWeatherValues.getGeogrBreite(), pWeatherValues.getGeogrLaenge(),
+				pWeatherValues.getWert());
 		return lResult;
+	}
+
+	public Map<WeatherKey, TmpWindV> getTmpWindV()
+	{
+		TmpWindVAccessor lAccessor = this.mappingManager.createAccessor(TmpWindVAccessor.class);
+		Result<TmpWindV> lRead = lAccessor.listTmpWindV(3);
+		Map<WeatherKey, TmpWindV> lResult = new HashMap<>();
+		for (TmpWindV bTmpWindV : lRead)
+		{
+			WeatherKey lKey = new WeatherKey(bTmpWindV.getLokationBezeichnung(), bTmpWindV.getPrognoseZeitpunkt(),
+					bTmpWindV.getZeitpunkt());
+			lResult.put(lKey, bTmpWindV);
+		}
+		return lResult;
+	}
+
+	public Map<WeatherKey, TmpWindU> getTmpWindU()
+	{
+		TmpWindUAccessor lAccessor = this.mappingManager.createAccessor(TmpWindUAccessor.class);
+		Result<TmpWindU> lRead = lAccessor.listTmpWindU(3);
+		Map<WeatherKey, TmpWindU> lResult = new HashMap<>();
+		for (TmpWindU bTmpWindU : lRead)
+		{
+			WeatherKey lKey = new WeatherKey(bTmpWindU.getLokationBezeichnung(), bTmpWindU.getPrognoseZeitpunkt(),
+					bTmpWindU.getZeitpunkt());
+			lResult.put(lKey, bTmpWindU);
+		}
+		return lResult;
+	}
+
+	public void saveForTotalWindSpeed(WeatherValues pValuesTotalWindSpeed, TmpWindU pTmpWindU, TmpWindV pTmpWindV)
+	{
+		Mapper<WeatherValues> lValuesMapper = this.mappingManager.mapper(WeatherValues.class);
+		Mapper<TmpWindU> lWindUMapper = this.mappingManager.mapper(TmpWindU.class);
+		Mapper<TmpWindV> lWindVMapper = this.mappingManager.mapper(TmpWindV.class);
+		BatchStatement lBatchStatement = new BatchStatement();
+		lBatchStatement.add(lValuesMapper.saveQuery(pValuesTotalWindSpeed));
+		lBatchStatement.add(lWindUMapper.deleteQuery(pTmpWindU));
+		lBatchStatement.add(lWindVMapper.deleteQuery(pTmpWindV));
+		Session lSession = this.mappingManager.getSession();
+		lSession.execute(lBatchStatement);
+		this.logger.info("imported %s and deleted %s and %s", pValuesTotalWindSpeed, pTmpWindU, pTmpWindV);
 	}
 }
