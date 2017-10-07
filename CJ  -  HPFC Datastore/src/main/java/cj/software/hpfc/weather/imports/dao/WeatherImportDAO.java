@@ -31,7 +31,8 @@ import cj.software.hpfc.weather.imports.entity.WeatherKey;
 import cj.software.hpfc.weather.imports.entity.WeatherValues;
 
 @Dependent
-public class WeatherImportDAO implements Serializable
+public class WeatherImportDAO
+		implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,12 +43,14 @@ public class WeatherImportDAO implements Serializable
 
 	public WeatherImportDAO()
 	{
-		CodecRegistry.DEFAULT_INSTANCE.register(new EnumNameCodec<MeteoMeasure>(MeteoMeasure.class));
+		CodecRegistry.DEFAULT_INSTANCE.register(
+				new EnumNameCodec<MeteoMeasure>(MeteoMeasure.class));
 	}
 
 	public List<ImportDirectory> listDirectories(String... pSearched)
 	{
-		WeatherImportAccessor lAccessor = this.mappingManager.createAccessor(WeatherImportAccessor.class);
+		WeatherImportAccessor lAccessor = this.mappingManager.createAccessor(
+				WeatherImportAccessor.class);
 		List<String> lAsList = this.toStringList(pSearched);
 		Result<ImportDirectory> lRead = lAccessor.listDirectories(lAsList);
 		List<ImportDirectory> lResult = lRead.all();
@@ -69,11 +72,14 @@ public class WeatherImportDAO implements Serializable
 
 	public void save(FilesFinished pFilesFinished, List<WeatherValues> pValuesList)
 	{
-		ImportDirectory lImportDirectory = new ImportDirectory(pFilesFinished.getDirectoryName(), false);
+		ImportDirectory lImportDirectory = new ImportDirectory(
+				pFilesFinished.getDirectoryName(),
+				false);
 
 		Mapper<FilesFinished> lMapperFiles = this.mappingManager.mapper(FilesFinished.class);
 		Mapper<ImportDirectory> lMapperDirs = this.mappingManager.mapper(ImportDirectory.class);
-		Mapper<WeatherValues> lMapperWeatherValues = this.mappingManager.mapper(WeatherValues.class);
+		Mapper<WeatherValues> lMapperWeatherValues = this.mappingManager.mapper(
+				WeatherValues.class);
 		Mapper<Lokation> lMapperLokation = this.mappingManager.mapper(Lokation.class);
 		Mapper<TmpWindU> lMapperWindU = this.mappingManager.mapper(TmpWindU.class);
 		Mapper<TmpWindV> lMapperWindV = this.mappingManager.mapper(TmpWindV.class);
@@ -86,8 +92,10 @@ public class WeatherImportDAO implements Serializable
 
 		for (WeatherValues bWeatherValues : pValuesList)
 		{
-			Lokation lCurrentLokation = new Lokation(bWeatherValues.getLokationBezeichnung(),
-					bWeatherValues.getGeogrBreite(), bWeatherValues.getGeogrLaenge());
+			Lokation lCurrentLokation = new Lokation(
+					bWeatherValues.getLokationBezeichnung(),
+					bWeatherValues.getGeogrBreite(),
+					bWeatherValues.getGeogrLaenge());
 			if (!lCurrentLokation.equals(lLastLokation))
 			{
 				lBatchStatement.add(lMapperLokation.saveQuery(lCurrentLokation));
@@ -123,16 +131,24 @@ public class WeatherImportDAO implements Serializable
 
 	private TmpWindU toTmpWindU(WeatherValues pWeatherValues)
 	{
-		TmpWindU lResult = new TmpWindU(pWeatherValues.getLokationBezeichnung(), pWeatherValues.getPrognoseZeitpunkt(),
-				pWeatherValues.getZeitpunkt(), pWeatherValues.getGeogrBreite(), pWeatherValues.getGeogrLaenge(),
+		TmpWindU lResult = new TmpWindU(
+				pWeatherValues.getLokationBezeichnung(),
+				pWeatherValues.getPrognoseZeitpunkt(),
+				pWeatherValues.getZeitpunkt(),
+				pWeatherValues.getGeogrBreite(),
+				pWeatherValues.getGeogrLaenge(),
 				pWeatherValues.getWert());
 		return lResult;
 	}
 
 	private TmpWindV toTmpWindV(WeatherValues pWeatherValues)
 	{
-		TmpWindV lResult = new TmpWindV(pWeatherValues.getLokationBezeichnung(), pWeatherValues.getPrognoseZeitpunkt(),
-				pWeatherValues.getZeitpunkt(), pWeatherValues.getGeogrBreite(), pWeatherValues.getGeogrLaenge(),
+		TmpWindV lResult = new TmpWindV(
+				pWeatherValues.getLokationBezeichnung(),
+				pWeatherValues.getPrognoseZeitpunkt(),
+				pWeatherValues.getZeitpunkt(),
+				pWeatherValues.getGeogrBreite(),
+				pWeatherValues.getGeogrLaenge(),
 				pWeatherValues.getWert());
 		return lResult;
 	}
@@ -144,7 +160,9 @@ public class WeatherImportDAO implements Serializable
 		Map<WeatherKey, TmpWindV> lResult = new HashMap<>();
 		for (TmpWindV bTmpWindV : lRead)
 		{
-			WeatherKey lKey = new WeatherKey(bTmpWindV.getLokationBezeichnung(), bTmpWindV.getPrognoseZeitpunkt(),
+			WeatherKey lKey = new WeatherKey(
+					bTmpWindV.getLokationBezeichnung(),
+					bTmpWindV.getPrognoseZeitpunkt(),
 					bTmpWindV.getZeitpunkt());
 			lResult.put(lKey, bTmpWindV);
 		}
@@ -158,14 +176,19 @@ public class WeatherImportDAO implements Serializable
 		Map<WeatherKey, TmpWindU> lResult = new HashMap<>();
 		for (TmpWindU bTmpWindU : lRead)
 		{
-			WeatherKey lKey = new WeatherKey(bTmpWindU.getLokationBezeichnung(), bTmpWindU.getPrognoseZeitpunkt(),
+			WeatherKey lKey = new WeatherKey(
+					bTmpWindU.getLokationBezeichnung(),
+					bTmpWindU.getPrognoseZeitpunkt(),
 					bTmpWindU.getZeitpunkt());
 			lResult.put(lKey, bTmpWindU);
 		}
 		return lResult;
 	}
 
-	public void saveForTotalWindSpeed(WeatherValues pValuesTotalWindSpeed, TmpWindU pTmpWindU, TmpWindV pTmpWindV)
+	public void saveForTotalWindSpeed(
+			WeatherValues pValuesTotalWindSpeed,
+			TmpWindU pTmpWindU,
+			TmpWindV pTmpWindV)
 	{
 		Mapper<WeatherValues> lValuesMapper = this.mappingManager.mapper(WeatherValues.class);
 		Mapper<TmpWindU> lWindUMapper = this.mappingManager.mapper(TmpWindU.class);
@@ -176,6 +199,10 @@ public class WeatherImportDAO implements Serializable
 		lBatchStatement.add(lWindVMapper.deleteQuery(pTmpWindV));
 		Session lSession = this.mappingManager.getSession();
 		lSession.execute(lBatchStatement);
-		this.logger.info("imported %s and deleted %s and %s", pValuesTotalWindSpeed, pTmpWindU, pTmpWindV);
+		this.logger.info(
+				"imported %s and deleted %s and %s",
+				pValuesTotalWindSpeed,
+				pTmpWindU,
+				pTmpWindV);
 	}
 }

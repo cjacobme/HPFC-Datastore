@@ -15,7 +15,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.migesok.jaxb.adapter.javatime.OffsetDateTimeXmlAdapter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Zeitreihenwert implements Comparable<Zeitreihenwert>
+public class Zeitreihenwert
+		implements Comparable<Zeitreihenwert>
 {
 	@XmlJavaTypeAdapter(OffsetDateTimeXmlAdapter.class)
 	private OffsetDateTime zeitpunkt;

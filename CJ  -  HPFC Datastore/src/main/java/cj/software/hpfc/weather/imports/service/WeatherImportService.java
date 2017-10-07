@@ -43,7 +43,8 @@ public class WeatherImportService
 	private Logger logger = LogManager.getFormatterLogger();
 
 	@GET
-	public DirectoriesListGetOut readIfDirectoriesFinished(@QueryParam("dirname") String... pDirectoryNames)
+	public DirectoriesListGetOut readIfDirectoriesFinished(
+			@QueryParam("dirname") String... pDirectoryNames)
 	{
 		List<ImportDirectory> lRead = this.weatherImportDAO.listDirectories(pDirectoryNames);
 		DirectoriesListGetOut lResult = this.entityToSchema.toDirectoriesListGetOut(lRead);
@@ -52,7 +53,8 @@ public class WeatherImportService
 
 	@POST
 	@Path("operations/mark-directory-finished")
-	public OperationMarkDirectoryFinishedOut markFinished(OperationMarkDirectoryFinishedIn pOperation)
+	public OperationMarkDirectoryFinishedOut markFinished(
+			OperationMarkDirectoryFinishedIn pOperation)
 	{
 		ImportDirectory lImportDirectory = this.schemaToEntity.toImportDirectory(pOperation);
 		this.weatherImportDAO.save(lImportDirectory);
@@ -69,7 +71,8 @@ public class WeatherImportService
 		List<WeatherValues> lValuesList = this.schemaToEntity.toValuesList(pOperation);
 		FilesFinished lFilesFinished = this.schemaToEntity.toFilesFinished(pOperation);
 		this.weatherImportDAO.save(lFilesFinished, lValuesList);
-		OperationImportWetterdatenOut lResult = this.entityToSchema.toOperationImportWetterdatenOut(lFilesFinished);
+		OperationImportWetterdatenOut lResult = this.entityToSchema.toOperationImportWetterdatenOut(
+				lFilesFinished);
 		return lResult;
 	}
 }

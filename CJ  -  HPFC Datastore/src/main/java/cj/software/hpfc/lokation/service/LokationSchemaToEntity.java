@@ -18,7 +18,9 @@ public class LokationSchemaToEntity
 
 	public Lokation toLokation(LokationDetail pLokationDetail)
 	{
-		Lokation lResult = new Lokation(pLokationDetail.getBezeichnung(), pLokationDetail.getGeogrBreite(),
+		Lokation lResult = new Lokation(
+				pLokationDetail.getBezeichnung(),
+				pLokationDetail.getGeogrBreite(),
 				pLokationDetail.getGeogrLaenge());
 		return lResult;
 	}

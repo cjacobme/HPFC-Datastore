@@ -11,7 +11,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class LokationDetail implements Serializable
+public class LokationDetail
+		implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -96,8 +97,10 @@ public class LokationDetail implements Serializable
 	public String toString()
 	{
 		ToStringBuilder lLBuilder = new ToStringBuilder(this);
-		lLBuilder.append("bezeichnung", this.bezeichnung).append("geogrBreite", this.geogrBreite).append("geogrLaenge",
-				this.geogrLaenge);
+		lLBuilder
+				.append("bezeichnung", this.bezeichnung)
+				.append("geogrBreite", this.geogrBreite)
+				.append("geogrLaenge", this.geogrLaenge);
 		return lLBuilder.build();
 	}
 

@@ -52,13 +52,18 @@ public class WeatherImportSchemaToEntity
 			{
 				Messgroesse lMessgroesse = bDatenFuerMessgroesse.getMessgroesse();
 				MeteoMeasure lMeteoMeasure = this.toMeteoMeasure(lMessgroesse);
-				SortedSet<Zeitreihenwert> lZeitreihenwerte = bDatenFuerMessgroesse.getZeitreihenwerte();
+				SortedSet<Zeitreihenwert> lZeitreihenwerte = bDatenFuerMessgroesse
+						.getZeitreihenwerte();
 				for (Zeitreihenwert bZeitreihenwert : lZeitreihenwerte)
 				{
 					OffsetDateTime lZeitpunkt = bZeitreihenwert.getZeitpunkt();
 					double lValue = bZeitreihenwert.getWert();
-					WeatherValues lEntry = new WeatherValues(lEntityLokation, lMeteoMeasure, lPrognoseZeitpunkt,
-							lZeitpunkt, lValue);
+					WeatherValues lEntry = new WeatherValues(
+							lEntityLokation,
+							lMeteoMeasure,
+							lPrognoseZeitpunkt,
+							lZeitpunkt,
+							lValue);
 					lResult.add(lEntry);
 				}
 			}

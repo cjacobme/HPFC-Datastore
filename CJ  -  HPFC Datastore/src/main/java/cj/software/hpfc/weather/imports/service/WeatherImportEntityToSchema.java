@@ -11,8 +11,8 @@ import cj.software.hpfc.weather.imports.entity.ImportDirectory;
 import cj.software.hpfc.weather.imports.schema.DirectoriesListGetOut;
 import cj.software.hpfc.weather.imports.schema.Directory;
 import cj.software.hpfc.weather.imports.schema.File;
-import cj.software.hpfc.weather.imports.schema.OperationMarkDirectoryFinishedOut;
 import cj.software.hpfc.weather.imports.schema.OperationImportWetterdatenOut;
+import cj.software.hpfc.weather.imports.schema.OperationMarkDirectoryFinishedOut;
 
 @Dependent
 public class WeatherImportEntityToSchema
@@ -41,14 +41,17 @@ public class WeatherImportEntityToSchema
 		return lResult;
 	}
 
-	public OperationMarkDirectoryFinishedOut toOperationMarkDirectoryFinishedOut(ImportDirectory pImportDirectory)
+	public OperationMarkDirectoryFinishedOut toOperationMarkDirectoryFinishedOut(
+			ImportDirectory pImportDirectory)
 	{
 		Directory lDirectory = this.toDirectory(pImportDirectory);
-		OperationMarkDirectoryFinishedOut lResult = new OperationMarkDirectoryFinishedOut(lDirectory);
+		OperationMarkDirectoryFinishedOut lResult = new OperationMarkDirectoryFinishedOut(
+				lDirectory);
 		return lResult;
 	}
 
-	public OperationImportWetterdatenOut toOperationImportWetterdatenOut(FilesFinished pFilesFinished)
+	public OperationImportWetterdatenOut toOperationImportWetterdatenOut(
+			FilesFinished pFilesFinished)
 	{
 		String lDirectoryName = pFilesFinished.getDirectoryName();
 		ImportDirectory lImportDirectory = new ImportDirectory(lDirectoryName, false);

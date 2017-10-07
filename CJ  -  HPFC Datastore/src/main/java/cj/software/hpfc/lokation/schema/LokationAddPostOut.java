@@ -8,7 +8,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "lokation-post-out")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class LokationAddPostOut implements Serializable
+public class LokationAddPostOut
+		implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 

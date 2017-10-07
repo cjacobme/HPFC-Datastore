@@ -13,7 +13,8 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
 @Table(name = "directory_finished")
-public class ImportDirectory implements Serializable
+public class ImportDirectory
+		implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 

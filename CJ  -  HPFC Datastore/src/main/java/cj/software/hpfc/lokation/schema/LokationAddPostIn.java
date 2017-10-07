@@ -10,7 +10,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "lokation-post-in")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class LokationAddPostIn implements Serializable
+public class LokationAddPostIn
+		implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 

@@ -7,7 +7,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "lokation-get-output")
-public class LokationGetOut implements Serializable
+public class LokationGetOut
+		implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 

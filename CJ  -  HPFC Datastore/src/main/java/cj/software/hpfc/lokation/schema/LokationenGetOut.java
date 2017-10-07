@@ -11,7 +11,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "lokationen-get-output")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class LokationenGetOut implements Serializable
+public class LokationenGetOut
+		implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 

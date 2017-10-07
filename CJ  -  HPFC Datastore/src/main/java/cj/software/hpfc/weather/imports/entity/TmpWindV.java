@@ -40,8 +40,13 @@ public class TmpWindV
 	{
 	}
 
-	public TmpWindV(String pLokationBezeichnung, Instant pPrognoseZeitpunkt, Instant pZeitpunkt, float pGeogrBreite,
-			float pGeogrLaenge, double pWert)
+	public TmpWindV(
+			String pLokationBezeichnung,
+			Instant pPrognoseZeitpunkt,
+			Instant pZeitpunkt,
+			float pGeogrBreite,
+			float pGeogrLaenge,
+			double pWert)
 	{
 		this();
 		this.setLokationBezeichnung(pLokationBezeichnung);
@@ -116,8 +121,10 @@ public class TmpWindV
 	public String toString()
 	{
 		ToStringBuilder lBuilder = new ToStringBuilder(this);
-		lBuilder.append("lokationBezeichnung", this.lokationBezeichnung)
-				.append("prognoseZeitpunkt", this.prognoseZeitpunkt).append("zeitpunkt", this.zeitpunkt)
+		lBuilder
+				.append("lokationBezeichnung", this.lokationBezeichnung)
+				.append("prognoseZeitpunkt", this.prognoseZeitpunkt)
+				.append("zeitpunkt", this.zeitpunkt)
 				.append("wert", this.wert);
 		return lBuilder.build();
 	}
@@ -126,7 +133,8 @@ public class TmpWindV
 	public int hashCode()
 	{
 		HashCodeBuilder lBuilder = new HashCodeBuilder();
-		lBuilder.append(this.lokationBezeichnung).append(this.prognoseZeitpunkt).append(this.zeitpunkt);
+		lBuilder.append(this.lokationBezeichnung).append(this.prognoseZeitpunkt).append(
+				this.zeitpunkt);
 		int lResult = lBuilder.build();
 		return lResult;
 	}
@@ -139,8 +147,10 @@ public class TmpWindV
 		{
 			TmpWindV lOther = (TmpWindV) pOther;
 			EqualsBuilder lBuilder = new EqualsBuilder();
-			lBuilder.append(this.lokationBezeichnung, lOther.lokationBezeichnung)
-					.append(this.prognoseZeitpunkt, lOther.prognoseZeitpunkt).append(this.zeitpunkt, lOther.zeitpunkt);
+			lBuilder
+					.append(this.lokationBezeichnung, lOther.lokationBezeichnung)
+					.append(this.prognoseZeitpunkt, lOther.prognoseZeitpunkt)
+					.append(this.zeitpunkt, lOther.zeitpunkt);
 			lResult = lBuilder.build();
 		}
 		else

@@ -11,7 +11,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Directory implements Serializable, Comparable<Directory>
+public class Directory
+		implements Serializable, Comparable<Directory>
 {
 	private static final long serialVersionUID = 1L;
 

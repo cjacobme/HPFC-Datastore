@@ -18,7 +18,8 @@ import com.datastax.driver.mapping.MappingManager;
 import cj.software.hpfc.lokation.entity.Lokation;
 
 @Dependent
-public class LokationenDAO implements Serializable
+public class LokationenDAO
+		implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 

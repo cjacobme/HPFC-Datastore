@@ -44,8 +44,12 @@ public class WeatherValues
 	{
 	}
 
-	public WeatherValues(Lokation pLokation, MeteoMeasure pMeteoMeasure, OffsetDateTime pPrognoseZeitpunkt,
-			OffsetDateTime pZeitpunkt, double pWert)
+	public WeatherValues(
+			Lokation pLokation,
+			MeteoMeasure pMeteoMeasure,
+			OffsetDateTime pPrognoseZeitpunkt,
+			OffsetDateTime pZeitpunkt,
+			double pWert)
 	{
 		this();
 		this.setLokationBezeichnung(pLokation.getBezeichnung());

@@ -53,11 +53,16 @@ public class WindspeedAdder
 		double lWertU = pTmpWindU.getWert();
 		double lWertV = pTmpWindV.getWert();
 		double lWertTotal = Math.sqrt(lWertU * lWertU + lWertV * lWertV);
-		Lokation lLokation = new Lokation(pTmpWindU.getLokationBezeichnung(), pTmpWindU.getGeogrBreite(),
+		Lokation lLokation = new Lokation(
+				pTmpWindU.getLokationBezeichnung(),
+				pTmpWindU.getGeogrBreite(),
 				pTmpWindU.getGeogrLaenge());
-		WeatherValues lResult = new WeatherValues(lLokation, MeteoMeasure.Speed_Total,
+		WeatherValues lResult = new WeatherValues(
+				lLokation,
+				MeteoMeasure.Speed_Total,
 				pTmpWindU.getPrognoseZeitpunkt().atOffset(ZoneOffset.UTC),
-				pTmpWindU.getZeitpunkt().atOffset(ZoneOffset.UTC), lWertTotal);
+				pTmpWindU.getZeitpunkt().atOffset(ZoneOffset.UTC),
+				lWertTotal);
 		return lResult;
 	}
 }

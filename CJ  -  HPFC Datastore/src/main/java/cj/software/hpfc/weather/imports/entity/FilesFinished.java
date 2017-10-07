@@ -13,7 +13,8 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
 @Table(name = "files_finished")
-public class FilesFinished implements Serializable
+public class FilesFinished
+		implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -99,7 +100,9 @@ public class FilesFinished implements Serializable
 		{
 			FilesFinished lOther = (FilesFinished) pOther;
 			EqualsBuilder lBuilder = new EqualsBuilder();
-			lBuilder.append(this.directoryName, lOther.directoryName).append(this.fileName, lOther.fileName);
+			lBuilder.append(this.directoryName, lOther.directoryName).append(
+					this.fileName,
+					lOther.fileName);
 			lResult = lBuilder.build();
 		}
 		else
