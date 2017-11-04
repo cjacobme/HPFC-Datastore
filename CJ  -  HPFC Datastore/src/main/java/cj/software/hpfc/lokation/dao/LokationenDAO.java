@@ -19,14 +19,15 @@ import cj.software.hpfc.lokation.entity.Lokation;
 
 @Dependent
 public class LokationenDAO
-		implements Serializable
+		implements
+		Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	private static final int BUCKET_NO = 1;
 
 	@Inject
-	private Session session;
+	Session session;
 
 	public LokationenDAO()
 	{
