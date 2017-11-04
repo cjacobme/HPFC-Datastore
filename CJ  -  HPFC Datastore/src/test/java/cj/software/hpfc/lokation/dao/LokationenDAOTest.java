@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 
 import cj.software.hpfc.lokation.entity.Lokation;
@@ -111,5 +113,19 @@ public class LokationenDAOTest
 		assertThat(lBezeichnungen).as("Gelesene Lokationsbezeichnungen").containsExactlyInAnyOrder(
 				"DE",
 				"AT");
+	}
+
+	@Test
+	public void addLokation()
+	{
+		Lokation lToBeAdded = new Lokation("GR", 23.45f, 32.1f);
+		LokationenDAOTest.lokationenDAO.addLokation(lToBeAdded);
+
+		Session lSession = lokationenDAO.session;
+		String lQuery = "SELECT COUNT(*) FROM Lokation WHERE bucket = 1";
+		ResultSet lResultSet = lSession.execute(lQuery);
+		Row lRow = lResultSet.one();
+		long lCount = lRow.getLong(0);
+		assertThat(lCount).as("Number of locations after insert").isEqualTo(3);
 	}
 }

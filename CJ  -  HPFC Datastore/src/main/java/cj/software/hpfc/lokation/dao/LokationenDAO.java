@@ -7,6 +7,9 @@ import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
@@ -25,6 +28,8 @@ public class LokationenDAO
 	private static final long serialVersionUID = 1L;
 
 	private static final int BUCKET_NO = 1;
+
+	private Logger logger = LogManager.getFormatterLogger();
 
 	@Inject
 	Session session;
@@ -80,7 +85,8 @@ public class LokationenDAO
 		MappingManager lMappingManager = new MappingManager(pSession);
 		Mapper<Lokation> lMapper = lMappingManager.mapper(Lokation.class);
 		lMapper.save(pLokation);
-		return pLokation.getBezeichnung();
-
+		String lResult = pLokation.getBezeichnung();
+		this.logger.info("added Lokation \"%s\"", lResult);
+		return lResult;
 	}
 }
