@@ -32,7 +32,7 @@ public class LokationenDAO
 	private Logger logger = LogManager.getFormatterLogger();
 
 	@Inject
-	Session session;
+	private Session session;
 
 	public LokationenDAO()
 	{
@@ -89,4 +89,10 @@ public class LokationenDAO
 		this.logger.info("added Lokation \"%s\"", lResult);
 		return lResult;
 	}
+
+	void setSession(Session pSession)
+	{
+		this.session = pSession;
+	}
+
 }
