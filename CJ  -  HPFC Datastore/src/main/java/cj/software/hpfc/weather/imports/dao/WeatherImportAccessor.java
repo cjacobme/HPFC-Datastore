@@ -14,4 +14,7 @@ public interface WeatherImportAccessor
 {
 	@Query("select * from directory_finished where bucket=1 and directory_name in :directories")
 	public Result<ImportDirectory> listDirectories(@Param("directories") List<String> pInClause);
+
+	@Query("select * from directory_finished where bucket = 1")
+	public Result<ImportDirectory> listAllDirectories();
 }

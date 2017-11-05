@@ -32,7 +32,8 @@ import cj.software.hpfc.weather.imports.entity.WeatherValues;
 
 @Dependent
 public class WeatherImportDAO
-		implements Serializable
+		implements
+		Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,6 +41,9 @@ public class WeatherImportDAO
 
 	@Inject
 	private MappingManager mappingManager;
+
+	@Inject
+	private Session session;
 
 	public WeatherImportDAO()
 	{
@@ -51,8 +55,16 @@ public class WeatherImportDAO
 	{
 		WeatherImportAccessor lAccessor = this.mappingManager.createAccessor(
 				WeatherImportAccessor.class);
-		List<String> lAsList = this.toStringList(pSearched);
-		Result<ImportDirectory> lRead = lAccessor.listDirectories(lAsList);
+		Result<ImportDirectory> lRead;
+		if (pSearched.length > 0)
+		{
+			List<String> lAsList = this.toStringList(pSearched);
+			lRead = lAccessor.listDirectories(lAsList);
+		}
+		else
+		{
+			lRead = lAccessor.listAllDirectories();
+		}
 		List<ImportDirectory> lResult = lRead.all();
 		return lResult;
 	}
@@ -124,8 +136,7 @@ public class WeatherImportDAO
 			}
 		}
 
-		Session lSession = this.mappingManager.getSession();
-		lSession.execute(lBatchStatement);
+		this.session.execute(lBatchStatement);
 		this.logger.info("imported %s", pFilesFinished);
 	}
 
@@ -197,12 +208,17 @@ public class WeatherImportDAO
 		lBatchStatement.add(lValuesMapper.saveQuery(pValuesTotalWindSpeed));
 		lBatchStatement.add(lWindUMapper.deleteQuery(pTmpWindU));
 		lBatchStatement.add(lWindVMapper.deleteQuery(pTmpWindV));
-		Session lSession = this.mappingManager.getSession();
-		lSession.execute(lBatchStatement);
+		this.session.execute(lBatchStatement);
 		this.logger.info(
 				"imported %s and deleted %s and %s",
 				pValuesTotalWindSpeed,
 				pTmpWindU,
 				pTmpWindV);
+	}
+
+	void setSession(Session pSession)
+	{
+		this.session = pSession;
+		this.mappingManager = new MappingManager(this.session);
 	}
 }

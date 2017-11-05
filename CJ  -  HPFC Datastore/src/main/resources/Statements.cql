@@ -1,5 +1,5 @@
 // Q1:
-CREATE TABLE directory_finished (
+CREATE TABLE IF NOT EXISTS directory_finished (
 	bucket INT, 
 	directory_name TEXT, 
 	directory_finished BOOLEAN, 
@@ -7,14 +7,14 @@ CREATE TABLE directory_finished (
 WITH CLUSTERING ORDER BY (directory_name ASC);
 
 // Q2:
-CREATE TABLE files_finished (
+CREATE TABLE IF NOT EXISTS files_finished (
 	directory_name TEXT, 
 	file_name TEXT, 
 	file_finished BOOLEAN, 
 	PRIMARY KEY ((directory_name),file_name)
 ) WITH CLUSTERING ORDER BY (file_name ASC);
 
-CREATE TABLE weather_values (
+CREATE TABLE IF NOT EXISTS weather_values (
 	lokation_bezeichnung TEXT,
 	meteo_measure TEXT,
 	prognosezeitpunkt TIMESTAMP,
@@ -25,7 +25,7 @@ CREATE TABLE weather_values (
 	PRIMARY KEY((lokation_bezeichnung, meteo_measure, prognosezeitpunkt), zeitpunkt)
 );
 
-CREATE TABLE lokation (
+CREATE TABLE IF NOT EXISTS lokation (
 	bucket INT,
 	bezeichnung TEXT,
 	geogr_breite FLOAT,
@@ -34,7 +34,7 @@ CREATE TABLE lokation (
 );
 
 //Q: List imported wind speeds in U direction that were not calculated to total speed
-CREATE TABLE tmp_wind_u (
+CREATE TABLE IF NOT EXISTS tmp_wind_u (
 	lokation_bezeichnung TEXT,
 	prognosezeitpunkt TIMESTAMP,
 	zeitpunkt TIMESTAMP,
@@ -45,7 +45,7 @@ CREATE TABLE tmp_wind_u (
 );
 
 //Q: List imported wind speeds in V direction that were not calculated to total speed
-CREATE TABLE tmp_wind_v (
+CREATE TABLE IF NOT EXISTS tmp_wind_v (
 	lokation_bezeichnung TEXT,
 	prognosezeitpunkt TIMESTAMP,
 	zeitpunkt TIMESTAMP,

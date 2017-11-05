@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,7 +17,10 @@ import org.apache.logging.log4j.Logger;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.junit.rules.ExternalResource;
 
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.KeyspaceMetadata;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.core.TableMetadata;
 
 /**
  * eine JUnit-Regel, die einen Embedded Cassandra Server startet. Dabei werden
@@ -63,6 +67,7 @@ public class EmbeddedCassandraStarter
 				EmbeddedCassandraServerHelper.CASSANDRA_RNDPORT_YML_FILE);
 		this.logger.info("Embedded Server is started");
 		this.session = this.createAndConnectToKeyspace(EmbeddedCassandraServerHelper.getSession());
+
 		this.applyFile(this.schemaFilename);
 		if (this.additionalFilenames != null)
 		{
@@ -138,14 +143,17 @@ public class EmbeddedCassandraStarter
 			String lLine = pReader.readLine();
 			while (lLine != null)
 			{
-				if (lLine.length() > 0)
+				if (!lLine.isEmpty())
 				{
 					String lCommentCleaned = this.cleanComment(lLine);
-					lBisher.append(lCommentCleaned);
-					if (lCommentCleaned.endsWith(";"))
+					if (!lCommentCleaned.isEmpty())
 					{
-						lResult.add(lBisher.toString());
-						lBisher.delete(0, lBisher.length());
+						lBisher.append(lCommentCleaned);
+						if (lCommentCleaned.endsWith(";"))
+						{
+							lResult.add(lBisher.toString());
+							lBisher.delete(0, lBisher.length());
+						}
 					}
 				}
 				lLine = pReader.readLine();
@@ -163,13 +171,37 @@ public class EmbeddedCassandraStarter
 			String lResult;
 			if (lIndex >= 0)
 			{
-				lResult = pSource.substring(0, lIndex);
+				lResult = pSource.substring(0, lIndex).trim();
 			}
 			else
 			{
-				lResult = pSource;
+				lResult = pSource.trim();
 			}
 			return lResult;
 		}
 	}
+
+	@Override
+	protected void after()
+	{
+		this.truncateKeyspaceTables();
+	}
+
+	private void truncateKeyspaceTables()
+	{
+		Session lSession = this.getSession();
+		Cluster lCluster = lSession.getCluster();
+		final KeyspaceMetadata lKeyspaceMetadata = lCluster.getMetadata().getKeyspace(
+				this.keyspaceName);
+		final Collection<TableMetadata> lTables = lKeyspaceMetadata.getTables();
+		for (TableMetadata bTable : lTables)
+		{
+			final String lTableName = bTable.getName();
+			String lStmt = String.format("truncate table %s.%s", this.keyspaceName, lTableName);
+			this.logger.debug(lStmt);
+			this.session.execute(lStmt);
+		}
+		this.logger.info("Keyspace \"%s\" cleaned", this.keyspaceName);
+	}
+
 }
