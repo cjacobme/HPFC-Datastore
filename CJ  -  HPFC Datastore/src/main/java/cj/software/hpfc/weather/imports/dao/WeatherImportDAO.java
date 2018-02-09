@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -15,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.CodecRegistry;
+import com.datastax.driver.core.Host;
+import com.datastax.driver.core.PoolingOptions;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.extras.codecs.enums.EnumNameCodec;
 import com.datastax.driver.mapping.Mapper;
@@ -65,7 +68,48 @@ public class WeatherImportDAO
 		{
 			lRead = lAccessor.listAllDirectories();
 		}
+
+		// final LoadBalancingPolicy loadBalancingPolicy =
+		// cluster.getConfiguration().getPolicies().getLoadBalancingPolicy();
+		// final PoolingOptions poolingOptions =
+		// cluster.getConfiguration().getPoolingOptions();
+		//
+		// ScheduledExecutorService scheduled =
+		// Executors.newScheduledThreadPool(1);
+		// scheduled.scheduleAtFixedRate(new Runnable() {
+		// @Override
+		// public void run() {
+		// Session.State state = session.getState();
+		// for (Host host : state.getConnectedHosts()) {
+		// HostDistance distance = loadBalancingPolicy.distance(host);
+		// int connections = state.getOpenConnections(host);
+		// int inFlightQueries = state.getInFlightQueries(host);
+		// System.out.printf("%s connections=%d, current load=%d, max
+		// load=%d%n",
+		// host, connections, inFlightQueries,
+		// connections *
+		// poolingOptions.getMaxRequestsPerConnection(distance));
+		// }
+		// }
+		// }, 5, 5, TimeUnit.SECONDS);
+
 		List<ImportDirectory> lResult = lRead.all();
+		Session.State lSessionState = this.session.getState();
+		Set<Host> lAllHosts = this.session.getCluster().getMetadata().getAllHosts();
+		PoolingOptions lPoolingOptions = this.session
+				.getCluster()
+				.getConfiguration()
+				.getPoolingOptions();
+		for (Host bHost : lAllHosts)
+		{
+			int lNumInflights = lSessionState.getInFlightQueries(bHost);
+			int lNumOpenConnections = lSessionState.getOpenConnections(bHost);
+			this.logger.info(
+					"%s connections=%d, current load=%d\r\n",
+					bHost.toString(),
+					lNumOpenConnections,
+					lNumInflights);
+		}
 		return lResult;
 	}
 
